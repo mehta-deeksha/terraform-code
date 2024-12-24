@@ -11,7 +11,7 @@ db_instance_class = "db.t3.micro"
 db_name = "wordpress"
 db_username = "admin"
 db_password = "Wordpress"
-
+peer_vpc_name = "NonProd"
 
 
 
