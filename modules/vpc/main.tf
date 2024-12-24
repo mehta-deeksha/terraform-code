@@ -73,6 +73,10 @@ data "aws_vpc" "peer_vpc" {
 # Fetch Peer Route Table Dynamically
 data "aws_route_table" "peer_route_table" {
   vpc_id = data.aws_vpc.peer_vpc.id
+filter {
+    name   = "association.main"
+    values = ["true"]
+  }
 }
 
 # VPC Peering Connection
