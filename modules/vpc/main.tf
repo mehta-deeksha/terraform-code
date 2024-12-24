@@ -61,3 +61,42 @@ resource "aws_route_table_association" "public_rt_association" {
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_rt.id
 }
+
+
+data "aws_vpc" "peer_vpc" {
+  filter {
+    name   = "tag:Name"
+    values = [var.peer_vpc_name] # Specify the Name tag of the peer VPC
+  }
+}
+
+# Fetch Peer Route Table Dynamically
+data "aws_route_table" "peer_route_table" {
+  vpc_id = data.aws_vpc.peer_vpc.id
+}
+
+# VPC Peering Connection
+resource "aws_vpc_peering_connection" "vpc_peering" {
+  vpc_id      = aws_vpc.main.id
+  peer_vpc_id = data.aws_vpc.peer_vpc.id
+
+  auto_accept = true
+
+  tags = {
+    Name = "VPC-Peering-Main-To-Peer"
+  }
+}
+
+# Main VPC Route Table Update
+resource "aws_route" "main_to_peer_route" {
+  route_table_id         = aws_route_table.public_rt.id
+  destination_cidr_block = data.aws_vpc.peer_vpc.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+}
+
+# Peer VPC Route Table Update
+resource "aws_route" "peer_to_main_route" {
+  route_table_id         = data.aws_route_table.peer_route_table.id
+  destination_cidr_block = var.vpc_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.vpc_peering.id
+}
