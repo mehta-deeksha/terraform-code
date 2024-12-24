@@ -74,3 +74,8 @@ variable "allocated_storage" {
   type        = number
   default     = 20  # You can set a default value or pass it explicitly
 }
+
+
+variable "peer_vpc_name" {
+  description = "The Name tag of the peer VPC"
+}
