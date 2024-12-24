@@ -2,12 +2,6 @@
 resource "aws_security_group" "rds_security_group" {
   vpc_id = var.vpc_id
 
-  ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = [var.ec2_sg_id] # Adjust for security
-  }
 
   egress {
     from_port   = 0
@@ -48,4 +42,14 @@ resource "aws_db_instance" "rds_instance" {
   tags = {
     Name = "MyRDSInstance"
   }
+}
+
+
+resource "aws_security_group_rule" "allow_ec2_to_rds" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = var.ec2_sg_id
+  security_group_id        = aws_security_group.rds_security_group.id
 }
