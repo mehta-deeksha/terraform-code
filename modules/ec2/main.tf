@@ -21,6 +21,13 @@ resource "aws_security_group" "ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] # Adjust for security
   }
+  # Allow HTTP (port 80) access from anywhere
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Adjust for security
+  }
 
   egress {
     from_port   = 0
