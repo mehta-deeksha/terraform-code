@@ -18,7 +18,7 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-variable "peer_vpc_name" {
+variable "vpc_name" {
   description = "The Name tag of the peer VPC"
 }
 
