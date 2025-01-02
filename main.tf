@@ -2,13 +2,20 @@ provider "aws" {
   region = var.infra_region
 }
 
+data "aws_vpc" "main" {
+  filter {
+    name   = "tag:Name"
+    values = [var.vpc_name] # Specify the Name tag of the peer VPC
+  }
+}
+
 module "vpc" {
   source              = "./modules/vpc"
-  vpc_cidr            = var.vpc_cidr
+  vpc_cidr            = data.aws_vpc.main.cidr_block
   public_subnet_cidrs = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
   availability_zones   = var.availability_zones
-  peer_vpc_name = var.peer_vpc_name
+  vpc_name = var.vpc_name
 }
 
 module "ec2" {
@@ -18,6 +25,11 @@ module "ec2" {
   subnet_id    = module.vpc.public_subnet_ids[0]
   vpc_id       = module.vpc.vpc_id
   key_name     = var.key_name
+  min_no_of_instances = var.min_no_of_instances
+  max_no_of_instances = var.max_no_of_instances
+  desired_no_of_instances = var.desired_no_of_instances
+  public_subnet_ids = module.vpc.public_subnet_ids
+  threshold = var.threshold
 }
 
 module "rds" {

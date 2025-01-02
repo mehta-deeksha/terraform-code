@@ -2,10 +2,6 @@ variable "infra_region" {
   description = "The AWS region to deploy resources in"
   type        = string
 }
-variable "vpc_cidr" {
-  description = "CIDR block for the VPC"
-  type        = string
-}
 variable "public_subnet_cidrs" {
   description = "List of CIDR blocks for public subnets"
   type        = list(string)
@@ -76,6 +72,26 @@ variable "allocated_storage" {
 }
 
 
-variable "peer_vpc_name" {
+variable "vpc_name" {
   description = "The Name tag of the peer VPC"
+}
+
+
+variable "min_no_of_instances"{
+  description = "Minimum number of instances needed"
+  type        = string
+}
+
+variable "max_no_of_instances"{
+  description = "Maximum number of instances needed"
+  type        = string
+}
+
+variable "desired_no_of_instances"{
+  description = "Desired number of instances "
+  type        = string
+}
+
+variable "threshold" {
+  description = "No of requests threshold per server"
 }
