@@ -1,7 +1,7 @@
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = [var.vpc_name] # Specify the Name tag of the peer VPC
+    values = [var.vpc_name] 
   }
 }
 
